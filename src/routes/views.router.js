@@ -44,10 +44,10 @@ router.post("/login", async(req, res) => {
     let user = await services.usersService.getPassByEmail(email);
     if (user.password != password) return res.status(400).send({status: 'error', message: 'Contraseña incorrecta'});
     req.session.user = {
-        email,
+        username: user.name,
         role:"user"
     }
-    
+
     return  res.send({status: 'OK', mensaje: "Logueo correcto"});
 });
 
@@ -61,11 +61,14 @@ router.get("/current", async(req, res) => {
 });
 
 router.get("/logout", async(req, res) => {
-    let nameUser = req.session.user.name;
+    let nameUser = {username: req.session.user.username};
+    console.log("ACA",nameUser,"--",req.session.user)
     req.session.destroy( err => {
-        if(err) return res.send("Intente de nuevo");
+        if(err) {
+            return res.send({mensaje: "Intente de nuevo"});
+        }
         else {
-            return res.render("logout",);
+            res.render("logout", nameUser);
         }
     })
 });

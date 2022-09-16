@@ -88,11 +88,15 @@ io.on('connection', async(socket) => {
 })
 
 app.get("/api", async(req, res) => {
-    try {
-        let productosAll = await services.productsService.getAll();
-        res.render('indexForm');
-    } catch (error) {
-        console.error("/",error)
+    if(req.session.user) {
+        try {
+            let nameUser = {username: req.session.user.username};
+            let productosAll = await services.productsService.getAll();
+            
+            res.render('indexForm', nameUser);
+        } catch (error) {
+            console.error("/",error)
+        }
     }
 });
 

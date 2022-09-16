@@ -141,11 +141,20 @@ function emptyInput(value) {
     $(value).val("");
 }
 
-$("#logout").submit(async(e) => {
+$("#logout").click(async(e) => {
     e.preventDefault();
     console.log("acacac")
     fetch('logout')
-    .then(res => res.json()).then(json => console.log(json))
-    .catch(error => console.log(error));
+    // .then(res => res.json()).then(json => console.log(json))
+    // .catch(error => console.log(error));
 });
 
+async function renderTable(productsData) {
+  const response = await fetch("/tableProducts.handlebars");
+  const source = await response.text();
+  const template = Handlebars.compile(source);
+  const context = { products: productsData };
+  let html = template(context);
+  $("#tableProducts").empty();
+  $("#tableProducts").append(html);
+}
